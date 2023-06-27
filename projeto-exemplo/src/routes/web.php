@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
+// controllers
+ use App\Http\Controllers;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,3 +19,25 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::post('/signup',
+// [
+    // 'uses' => 'UserController@postSignUp', //com isso, definimos que É ESSE CONTROLLER QUE SERÁ USADO, A PARTIR DE QUAISQUER POST REQUESTS A ESSA ROUTE DE '/signup'...
+    // 'as' => 'signup' // com isso, definimos 1 alias para essa route, que pode ser usado AO LONGO DE NOSSO APP INTEIRO...
+
+// ]
+//  [Controllers::class, 'signup']
+'App\Http\Controllers\UserController@postSignUp'
+);
+
+
+Route::post('/signin',
+// [
+//     'uses' => 'UserController@postSignIn',
+//     'as' => 'signin'
+// ]
+// 'UserController@postSignIn'
+'App\Http\Controllers\UserController@postSignIn'
+// [Controllers::class, 'signin']
+);

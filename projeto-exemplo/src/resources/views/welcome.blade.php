@@ -17,7 +17,10 @@ PATH ATÉ O SEU ARQUIVO, para definir que vamos inserir coisas deste arquivo 'we
     <div class="row">
         <div class="col-6 col-md-6">
             <h3>Sign Up</h3>
-            <form action="#" method="POST">
+            {{-- <form action="#" method="POST"> --}}
+                <!--  usamos a template expression, na 'action', para disparar requests contra nosso backend...-->
+                <!-- isso vai nos levar até a route de 'signup', conforme definido em 'web.php'... -->
+                <form action="{{ URL('signup') }}" method="POST">
                 <div class="form-group">
                     <label for="email">Your Email</label>
                     <input type="email" name="email" id="email" class="form-control">
@@ -30,12 +33,14 @@ PATH ATÉ O SEU ARQUIVO, para definir que vamos inserir coisas deste arquivo 'we
                     <label for="password">Password</label>
                     <input type="password" name="password" id="password" class="form-control">
                 </div>
+                <!-- PRECISAMOS DESSE INPUT ESPECIAL, HIDDEN... é uma feature do laravel, usada contra CSRF attacks... é obrigatória -->
+                <input type="hidden" name="_token" value={{ Session::token()}}>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
         <div class="col-6 col-md-6">
             <h3>Sign In</h3>
-            <form action="#" method="POST">
+            <form action="{{ URL('signin')}}" method="POST">
                 <div class="form-group">
                     <label for="email">Your Email</label>
                     <input type="email" name="email" id="email" class="form-control">

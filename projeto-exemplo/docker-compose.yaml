@@ -27,6 +27,8 @@ services:
     image: mysql:5.7
     env_file:
       - ./env/mysql.env
+    volumes:
+      - 'my-sql-volume:/var/lib/mysql'
 
   composer:
     build:
@@ -53,5 +55,5 @@ services:
 
     entrypoint: ['npm']
 
-    volumes:
-      - ./src:/var/www/html
+volumes:
+  my-sql-volume:

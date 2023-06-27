@@ -1,0 +1,4973 @@
+
+
+
+
+
+
+
+
+
+
+
+NA ÚLTIMA AULA ADICIONAMOS A VIEW DE SIGNUP E LOGIN...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PRECISAMOS DA LÓGICA DE AUTH PARA ESSAS VIEWS....
+
+
+
+
+
+
+
+--> O PROFESSOR VAI CRIAR 1 USER MODEL AGORA,
+
+
+
+E AÍ 
+
+
+
+
+
+A VINCULARÁ 
+
+
+
+
+A ESSAS FORMS,
+
+USANDO O LARAVEL...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> ele começa pelo create do model do user...
+
+
+
+
+
+
+
+para isso, ele utilizará a command line 
+
+
+
+
+do laravel, com 'php artisan' (teremos de rodar isso na nossa cli, fora do docker container)...
+
+
+
+
+
+
+
+O COMANDO É 
+
+
+
+'php artisan make:model'...
+
+
+
+
+
+
+
+
+
+
+--> 
+
+
+
+
+COLOCAREMOS O NOME DE 'user'...
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> o laravel já vem com 1 user model,
+
+
+
+
+
+mas devemos usar 1 user model próprio...
+
+
+
+
+
+
+
+
+
+
+
+ok... apaguei
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> estava no folder errado...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+php artisan make:model 
+
+
+
+
+
+
+
+
+
+
+
+
+--> no folder de 'database' também nos livramos do 'create user'
+
+e 
+
+'create password' tables... (migrations)
+
+
+
+
+
+
+
+
+
+
+OK... AGORA O PROFESSOR EXECUTA O COMANDO...
+
+
+
+
+
+
+
+
+
+ELE CRIA 1 USER MODEL...
+
+
+
+
+
+
+
+
+
+
+--> ele coloca '-m' uma flag, para que 
+
+
+SEJA CRIADA __ _TAMBÉM 1 MIGRATION PARA __ ESSE USER MODEL,
+
+
+IMEDIATAMENTE...
+
+
+
+
+
+
+
+
+
+ex:
+
+
+
+
+
+
+
+
+
+
+
+php artisan make:model User -m
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------
+
+
+
+
+
+
+
+
+
+OS CÓDIGOS FICARAM ASSIM:
+
+
+
+
+
+
+
+
+
+
+
+
+
+MIGRATION:
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+MODEL:
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    use HasFactory;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+OK.... 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MAS O QUE SÃO MIGRATIONS, NO LARAVEL?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'MODEL' --> É O LOCAL EM QUE VC TEM SUA BUSINESS LOGIC,
+
+É 
+
+O LOCAL EM QUE VC TEM SUA DATA E CORE LOGIC...
+
+
+
+
+
+
+
+
+
+
+
+-> MIGRATIONS --> É UMA NICE TOOL PELA QUAL 
+
+
+PODEMOS CONVENIENTEMENTE GERAR TABLES NA NOSSA DATABASE...
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> NESSE ARQUIVO, DEFINIMOS 1 SCHEME QUE DEVE SER USADO 
+
+PARA CRIAR A RESPECTIVA TABLE...
+
+
+
+
+
+
+
+
+
+--> '-m' --> isso fez com que a migration também fosse criada....
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> ESSA FILE ESPECIFICA 1 FUNCTION 
+
+
+
+
+QUE __ É RODADA _ QUANDO FAZEMOS MIGRATE DE NOSSAS
+
+
+
+MIGRATION FILES...
+
+
+
+
+
+
+
+
+
+
+
+
+--> A FUNCTION 'up' vai criar  1 table na nossa database...
+
+
+
+
+
+
+
+
+
+
+--> com '$table ->',
+
+
+
+
+ESPECIFICAMOS COMO ELA DEVE SER ESTRUTURADA,
+
+QUE FIELDS DEVE TER, COMO DEVEM SER CONFIGURADOS,
+
+
+SE DEVEM SER NULLABLE, ETC...
+
+
+
+
+
+
+
+
+
+
+
+
+--> TAMBÉM TEMOS A FUNCTION DE 'down',
+
+QUE 
+
+É 
+
+
+USADA PARA FAZER 'ROLLBACK' DE MIGRATIONS -> se vc quiser start fresh... (undo things)...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> É UMA MANEIRA CONVENIENTE DE ACESSAR SUA DATABASE 
+
+E CRIAR/DELETAR TABLES ___ SEM TER __ DE ESCREVER QUALQUER 
+
+CÓDIGO SQL,
+
+
+
+
+
+SEM TER DE IR NA DATABASE... (evitando coisas como antares)...
+
+
+
+
+
+
+
+
+
+
+
+--> vc só cria essa table aí rapidamente, com essa migration...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OK.... ESSA É A MIGRATION FILE PARA NOSSA TABLE DE USERS...
+
+
+
+
+
+
+
+
+--> O PROFESSOR QUER ADICIONAR FIELDS SIMPLES NO USER...
+
+
+
+
+
+
+
+
+ele adiciona um field de 'string', com esta sintaxe:
+
+
+
+
+
+
+
+
+
+
+
+
+EX:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('name', 100);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEREMOS OUTRA STRING, QUE SERÁ O PASSWORD:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('name', 100);
+            $table->string('password', 100);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+O PROFESSOR TAMBÉM VAI ADICIONAR UMA OUTRA COISINHA, OUTRO FIELD,
+
+
+QUE SERÁ 
+
+
+'rememberToken()'..
+
+
+
+
+
+
+
+
+
+
+
+--> ESSE É UM FIELD EM QUE O LARAVEL PODERÁ/PODE ARMAZENAR 1 TOKEN,
+
+
+
+
+
+1 TOKEN QUE SERIA USADO SE TIVÉSSEMOS 
+
+
+1 CHECKBOX DE 'remember me' ----------> ISSO FARIA O STORE 
+
+DA KEY EM 1 COOKIE, NO COMPUTADOR _ DO USER,
+
+
+TAMBÉM NA NOSSA TABLE,
+
+
+PARA QUE 
+
+SAIBAMOS 
+
+
+SE 
+
+O USER 
+
+
+
+FECHOU 
+
+
+
+ESSE BROWSER E SE VOLTOU MAIS TARDE, CHECAR SE ELE AINDA ESTÁ 
+
+LOGGADO...
+
+
+
+
+
+
+
+
+
+
+
+
+
+----> NÃO VAMOS IMPLEMENTAR ESSA FEATURE NO NOSSO APP,
+
+MAS ESSE FIELD DEVE SER ADICIONADO MESMO ASSIM...
+
+
+
+
+
+
+-----_> PQ, CASO CONTRÁRIO,
+
+
+
+OS AUTHENTICATION METHODS __ PROVIDENCIADOS __ 
+
+PELO LARAVEL VÃO FAZER THROW DE ALGUNS 
+
+
+ERROS CHATOS, SE NÃO TIVERMOS ESSE FIELD ESPECIFICADO..
+
+
+
+
+
+
+
+
+
+É POR ISSO QUE ESCREVEMOS ASSIM:
+
+
+
+
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('name', 100);
+            $table->string('password', 100);
+            $table->rememberToken();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OK...
+
+
+
+
+
+
+
+
+MAS O QUE FAZEMOS NA FILE DE 'User.php'?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> NO MOMENTO, NÃO FAREMOS COISA ALGUMA..
+
+
+
+
+
+
+
+
+
+
+--> ISSO PQ NO BACKGROUND O LARAVEL, COMO TEMOS 1 SQL DATABASE,
+
+
+TERÁ 1 '''STRONG CONNECTION''' COM A DATABASE... --> TUDO POR MEIO 
+
+
+DO PACKAGE 
+
+
+DE 
+
+'Eloquent' --> É O 
+
+
+
+
+'OBJECT RELATIONAL MAPPING' (ORM) do laravel -->  É  1 CONNECTION 
+
+
+
+
+COM A TABLE DA DATABASE, NO BACKGROUND...
+
+
+
+
+
+
+
+
+
+
+
+
+
+O CÓDIGO DE USER MODEL:
+
+
+
+
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    use HasFactory;
+}
+
+
+
+
+
+
+
+
+COM ISSO, SEREMOS CAPAZES DE ACESSAR 
+
+TODOS NOSSOS FIELDS,
+
+NESSA TABLE,
+
+DE FORMA MT CONVENIENTE E INTUITIVA,
+
+
+
+
+POR MEIO __ DESSE MODEL DE 'USER',
+
+
+
+
+SEM ESPECIFICAR QUALQUER COISA NELE... --> ESSA É A MÁGICA 
+
+
+
+FEITA PELO LARAVEL --> tudo por conta do ELOQUENT --> QUE É 
+
+UMA MANEIRA 
+
+CONVENIENTE DE ACESSAR A DATABASE/TABLES __ EM QUE __ O
+
+
+USER MODEL ESTÁ ARMAZENADO....
+
+
+
+
+
+
+
+
+
+--> PARA QUE ISSO FUNCIONE,
+
+PRECISAMOS TER 1 CERTA NAMING CONVENTION..
+
+
+
+
+
+
+
+
+ex:
+
+
+
+
+
+
+
+class User extends Model {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- PRECISAMOS QUE ESSE USER TENHA ESSA LETRA INICIAL MAIÚSCULA,
+
+
+e precisamos que ele faça extend de 'Model'...
+
+
+
+
+
+
+
+
+Se tivéssemos 
+
+
+
+'userTickets' na table,
+
+
+
+
+
+
+
+tipo assim:
+
+
+
+
+
+
+
+Schema::create('tickets')
+
+
+
+
+
+
+
+
+
+
+
+class Tickets extends Model {
+
+
+
+}
+
+
+
+------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+--> MAS SE TIVÉSSEMOS 
+
+
+ALGO COMO 
+
+
+'user2',
+
+
+
+
+
+o laravel não conseguiria 
+
+
+encontrar 
+
+
+
+
+
+
+
+o model de 'User' correspondente (pq o nome está como 'User'),
+
+
+
+
+
+
+
+VC TERIA 
+
+
+DE COMUNICAR AO LARAVEL QUE 
+
+
+
+
+
+ESSE MODEL É O MODEL QUE VC GOSTARIA DE TARGETTAR..
+
+
+
+
+
+
+
+
+
+COMO FARÍAMOS ISSO?
+
+
+
+
+
+
+
+
+POR MEIO DO ADD DE UMA PROPRIEDADE ESPECIAL DENTRO 
+
+
+DO MODEL,
+
+
+
+
+a propriedade '$table',
+
+
+TIPO ASSIM:
+
+
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    use HasFactory;
+
+    protected $table = 'users2';
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> isso funcionaria, 
+
+no caso,
+
+
+
+
+
+
+
+PQ __ O LARAVEL SABERIA QUE 'NÃO ESTAMOS PROCURANDO POR Users',
+
+
+e sim por 'users2',
+
+
+
+
+a table especificada nesse model...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> tudo já funciona out of the box...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> ok... esse é o model de user...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> é uma core feature...
+
+
+
+
+
+
+
+
+
+
+
+
+-> vc poderia usar nosql databases no seu projeto...
+
+
+
+
+
+
+
+
+
+
+
+
+--> certo... com isso, é hora de 
+
+
+adicionarmos nosso próprio controller...
+
+
+
+
+
+
+
+
+
+
+
+
+--> PQ QUEREMOS SER CAPAZES DE, NA NOSSA VIEW DE 'welcome',
+
+
+
+
+
+ao SEREM CLICADOS OS BUTTONS DE 'SIGNUP' E 'SIGNIN',
+
+
+
+
+
+
+
+DISPARAR ACTIONS DE 'SIGNUP' E 'LOGIN'...
+
+
+
+
+
+
+
+
+
+
+
+
+-> PARA ESCREVERMOS ESSA LÓGICA, A PRIMEIRA COISA QUE O PROFESSOR 
+
+FAZ É SE LIVRAR 
+
+
+DO CONTROLLER DE 'Auth',
+
+lá no folder de 'http'...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-> ISSO FEITO, O PROFESSOR CRIA 1 NOVO ARQUIVO,
+
+QUE CHAMA 
+
+DE 
+
+
+'UserController.php'...
+
+
+
+
+
+
+
+
+
+
+
+como isso é um ARQUIVO PHP,
+
+
+ELE COMEÇA 
+
+
+
+COM A SINTAXE CLÁSSICA DO 
+
+PHP,
+
+QUE É:
+
+
+
+
+
+
+
+<?php
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+certo...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+COLOCAMOS O NOME DE 'Controller.php',
+
+
+nesse 
+
+arquivo controller...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+depois disso, o que ele faz é definir 1 ''''NAMESPACE'''
+
+
+para essa file...
+
+
+
+
+
+
+
+
+
+
+
+ele faz isso com 
+
+
+
+
+
+'''
+
+<?php
+
+namespace App\Http\Controllers;
+
+
+'''
+
+
+
+
+
+------------------------------
+
+
+
+
+
+
+
+
+DEPOIS DISSO, ELE CRIA 1 CLASS DE NOME 
+
+
+'UserController',
+
+
+que fará EXTEND 
+
+
+do controller default do laravel....
+
+
+
+
+
+
+
+
+
+
+EX:
+
+
+
+
+
+
+
+
+
+<?php
+
+namespace App\Http\Controllers;
+
+class UserController extends Controller {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+ISSO FEITO, O QUE QUEREMOS TER, AQUI,
+
+
+
+É ___ 1 METHOD DE 
+
+
+
+'sign-up' (de tipo POST),
+
+
+
+
+
+
+QUE SERÁ EXECUTADO SEMPRE QUE CLICARMOS 
+
+
+
+naquele button...
+
+
+
+
+
+
+
+
+
+--> VAMOS CRIAR ESSAS FUNCTIONS ASSIM:
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+namespace App\Http\Controllers;
+
+class UserController extends Controller {
+
+    public function postSignUp() {
+
+    }
+
+    public function postSignIn() {
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+certo...
+
+
+
+
+
+
+
+
+
+AMBAS FUNCTIONS RECEBERÃO UM OBJECT DE 'request' --> 
+
+
+
+
+
+
+
+
+RECEBERÃO ESSE OBJECT PQ, AO CLICARMOS NO BUTTON DE SUBMIT,
+
+
+
+O REQUEST SERÁ ENVIADO AO NOSSO SERVER, E ISSO SERÁ HANDLADO PELO LARAVEL...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> DAQUI A POUCO, NO NOSSO ARQUIVO ROUTES,
+
+
+
+VAMOS HOOKAR __ NOSSAS FUNCTIONS, METHODS DE AGORA,
+
+
+
+AO 
+
+REQUEST CORRESPONDENTE DESSA FORM....
+
+
+
+
+
+
+
+
+
+---> E, COMO ESSE SERÁ 1 POST REQUEST,
+
+NÃO TEREMOS NENHUM PARAMETER DE 'GET',
+
+
+MAS 
+
+TEREMOS 
+
+
+NOSSOS PARAMETERS NO REQUEST BODY...
+
+
+
+
+
+
+
+
+
+
+
+--> E PRECISAMOS ACESSAR O REQUEST BODY...
+
+
+
+
+
+
+
+
+
+
+
+-> FAZEMOS ISSO POR MEIO __ DO RECURSO 'DEPENDENCY INJECTION'
+
+DO LARAVEL,
+
+QUE É MT FORTE..
+
+
+
+
+
+
+
+
+--> PARA USAR ESSE RECURSO,
+
+
+
+
+BASTA _ ESPECIFICAR _ o TYPE _ DO OBJECT QUE __ VAMOS QUERER 
+
+INJETAR...
+
+
+
+
+
+
+
+
+
+
+
+-> COMO NÓS QUEREMOS USAR 1 OBJECT DE TIPO 'Request',
+
+
+colocamos esse type aí, que será importado 
+
+
+
+
+DO NAMESPACE 
+
+
+de 
+
+'Illuminate\Http\Request'.....
+
+
+
+
+
+TIPO ASSIM:
+
+
+
+
+
+
+
+
+
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class UserController extends Controller {
+
+    public function postSignUp(Request) {
+
+    }
+
+    public function postSignIn() {
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MAS AINDA NÃO ACABAMOS...
+
+
+
+
+
+
+precisamos DAR 1 __ NOME A ESSA VARIABLE QUE ESTAMOS INJETANDO..
+
+
+
+
+
+
+
+
+
+FAZEMOS ISSO POR MEIO DE '$request'...
+
+
+
+
+
+
+
+
+EX:
+
+
+
+
+
+
+
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class UserController extends Controller {
+    // '$request' -> é isso que dá um NOME ('$request') a essa variável, que poderá ser usada dentro de 'postSignUp' e 'postSignIn'
+    public function postSignUp(Request $request) {
+
+    }
+
+    public function postSignIn() {
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+ok... agora podemos usar essa variável na nossa function...
+
+
+
+
+
+
+
+
+
+
+--> 
+VC PODE INJETAR TODO TIPO DE OBJECTS COM O LARAVEL (ele conhece 1 monte de objects, por default)...
+
+
+
+
+
+
+
+
+
+
+
+
+--> VC TAMBÉM PODE CRIAR CUSTOM OBJECTS, COM O LARAVEL..
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-> VEREMOS ISSO EM VIDEOS FUTUROS...
+
+
+
+
+
+
+
+--> ok... agora queremos criar a funcionalidade de signup...
+
+
+
+
+
+
+
+
+
+
+--> o professor coloca 1 variável de '$email',
+
+
+
+e ele define isso assim:
+
+
+
+
+
+
+$email = ...
+
+
+
+
+
+
+
+
+
+
+para conseguir o VALOR desse email,
+
+
+devemos acessar o param/object de '$request',
+
+
+
+
+que será justamente 1 ARRAY,
+
+
+em que poderemos acessar o field de 'email'...
+
+
+
+
+
+
+
+
+
+
+
+
+
+EX:
+
+
+
+
+
+
+
+
+
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class UserController extends Controller {
+    // '$request' -> é isso que dá um NOME ('$request') a essa variável, que poderá ser usada dentro de 'postSignUp' e 'postSignIn'
+    public function postSignUp(Request $request) {
+        $email = $request['email'];
+        $password = $request['password'];
+    }
+
+    public function postSignIn() {
+
+    }
+
+}
+
+
+
+
+
+
+
+
+-----------------------
+
+
+
+
+
+
+
+
+
+
+certo...
+
+
+
+
+
+
+
+
+
+pegamos isso tudo por meio 
+
+
+
+
+do array de reqeust,
+
+
+que vai pegar coisas como 
+
+
+
+<input class="form-control" name="password">
+
+
+
+e 
+
+
+
+
+<input class="form-control" name="name">
+
+
+
+
+
+
+
+
+
+
+
+
+
+EX:
+
+
+
+
+
+
+
+
+
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class UserController extends Controller {
+    // '$request' -> é isso que dá um NOME ('$request') a essa variável, que poderá ser usada dentro de 'postSignUp' e 'postSignIn'
+    public function postSignUp(Request $request) {
+        $email = $request['email'];
+        $first_name= $request['first_name'];
+        $password = $request['password'];
+    }
+
+    public function postSignIn() {
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+EX:
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class UserController extends Controller {
+    // '$request' -> é isso que dá um NOME ('$request') a essa variável, que poderá ser usada dentro de 'postSignUp' e 'postSignIn'
+    public function postSignUp(Request $request) {
+        $email = $request['email'];
+        $first_name = $request['first_name'];
+        $password = $request['password'];
+    }
+
+    public function postSignIn() {
+
+    }
+
+}
+
+
+
+
+
+
+
+-------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+OK.... MAS É CLARO QUE NÃO QUEREMOS ARMAZENAR O PASSWORD, DESSA FORMA,
+
+NA NOSSA DATABASE.... QUEREMOS O ENCRIPTAR ANTERIORMENTE...
+
+
+
+
+
+
+
+
+
+
+
+-> PARA ISSO, USAREMOS 
+
+1 HELPER FUNCTION DO LARAVEL,
+
+A FUNCTION DE 'bcrypt',
+
+
+TIPO ASSIM:
+
+
+
+
+
+
+
+
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class UserController extends Controller {
+    // '$request' -> é isso que dá um NOME ('$request') a essa variável, que poderá ser usada dentro de 'postSignUp' e 'postSignIn'
+    public function postSignUp(Request $request) {
+        $email = $request['email'];
+        $first_name = $request['first_name'];
+        $password = bcrypt($request['password']);
+    }
+
+    public function postSignIn() {
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> ESSA FUNCTION VAI HASHEAR MEU PASSWORD,
+
+PARA QUE 
+
+
+
+
+ELE SEJA __ 'SAFELY DECRYPTED NA NOSSA DATABASE'...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-> MAIS TARDE, QUANDO TENTARMOS FAZER AUTH DO USER,
+
+
+VAMOS USAR 1 HELPER, PROVIDENCIADO PELO LARAVEL,
+
+QUE 
+
+
+
+VAI __ CHECAR __ OS HASHED __ 
+
+VALUES __ 
+
+
+
+DO ENTERED PASSWORD E DO PASSWORD INSERIDO NA DATABASE,
+
+
+PARA VERIFICAR SE 
+
+O 
+
+PASSWORD CORRETO FOI INPUTTADO...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ISSO FEITO,
+
+O PROFESSOR TERMINA O METHOD DE 'signup'
+
+
+POR MEIO _ DO CREATE__ DO USER...
+
+
+
+
+
+
+
+
+
+
+
+--> PARA ISSO,
+
+ELE CRIA 1 VARIÁVEL DE 'user',
+
+tipo assim:
+
+
+
+
+
+
+
+$user = new User();
+
+
+
+
+
+
+
+
+
+
+
+
+ele importa esse object de 'User'
+
+
+com a sintaxe 
+
+
+
+
+'use App\User';
+
+
+
+
+
+
+
+
+
+
+EX:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+// export deste arquivo
+namespace App\Http\Controllers;
+
+// imports
+use Illuminate\Http\Request;
+use App\Models\User;
+
+class UserController extends Controller {
+    // '$request' -> é isso que dá um NOME ('$request') a essa variável, que poderá ser usada dentro de 'postSignUp' e 'postSignIn'
+    public function postSignUp(Request $request) {
+        $email = $request['email'];
+        $first_name = $request['first_name'];
+        $password = bcrypt($request['password']);
+    }
+
+    public function postSignIn() {
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+COM ISSO, PODEMOS ACESSAR OS FIELDS NA NOSSA DATABASE TABLE,
+
+COMO PROPERTIES 
+
+DESSE MODEL,
+
+
+
+
+tipo assim:
+
+
+
+
+
+
+$user = new User();
+$user->email = $email;
+$user->first_name = $first_name;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EX:
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+// export deste arquivo
+namespace App\Http\Controllers;
+
+// imports
+use Illuminate\Http\Request;
+use App\Models\User;
+
+class UserController extends Controller {
+    // '$request' -> é isso que dá um NOME ('$request') a essa variável, que poderá ser usada dentro de 'postSignUp' e 'postSignIn'
+    public function postSignUp(Request $request) {
+        $email = $request['email'];
+        $first_name = $request['first_name'];
+        $password = bcrypt($request['password']);
+
+        $user = new User();
+        $user->email = $email;
+        $user->first_name = $first_name;
+        $user->password = $password;
+    }
+
+    public function postSignIn() {
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ISSO FEITO,
+O  QUE O PROFESSOR FAZ 
+
+
+é 
+
+rodar 
+
+
+
+'$user->save()',
+
+
+PARA 
+
+
+
+AÍ 
+
+
+
+SALVAR ESSE USER NA NOSSA DATABASE...
+
+
+
+
+
+
+
+
+
+EX:
+
+
+
+
+
+
+
+
+
+<?php
+// export deste arquivo
+namespace App\Http\Controllers;
+
+// imports
+use Illuminate\Http\Request;
+use App\Models\User;
+
+class UserController extends Controller {
+    // '$request' -> é isso que dá um NOME ('$request') a essa variável, que poderá ser usada dentro de 'postSignUp' e 'postSignIn'
+    public function postSignUp(Request $request) {
+        $email = $request['email'];
+        $first_name = $request['first_name'];
+        $password = bcrypt($request['password']);
+
+        $user = new User();
+        $user->email = $email;
+        $user->first_name = $first_name;
+        $user->password = $password;
+
+        $user->save(); //salva o user no banco de dados
+    }
+
+    public function postSignIn() {
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---> OK.. O PROFESSOR ENTÃO ___ RETORNA 1 REDIRECT,
+
+REDIRECT PARA _ '''A VIEW DE ONDE VIEMOS'''....
+
+
+
+
+
+
+
+
+
+
+
+
+EX:
+
+
+
+
+
+
+
+
+
+
+
+<?php
+// export deste arquivo
+namespace App\Http\Controllers;
+
+// imports
+use Illuminate\Http\Request;
+use App\Models\User;
+
+class UserController extends Controller {
+    // '$request' -> é isso que dá um NOME ('$request') a essa variável, que poderá ser usada dentro de 'postSignUp' e 'postSignIn'
+    public function postSignUp(Request $request) {
+        $email = $request['email'];
+        $first_name = $request['first_name'];
+        $password = bcrypt($request['password']);
+
+        $user = new User();
+        $user->email = $email;
+        $user->first_name = $first_name;
+        $user->password = $password;
+
+        $user->save(); //salva o user no banco de dados
+
+
+        return redirect()->back(); //redireciona para a página anterior
+    }
+
+    public function postSignIn() {
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OK... 
+
+
+
+
+
+ESSE REDIRECT, NO MOMENTO, VAI APENAS REDIRECIONAR À PAGINA ANTERIOR...
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> MAS MAIS TARDE FAREMOS O REDIRECT A UM DASHBOARD, COISA DO GÊNERO...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+VAMOS ESCREVENDO TIPO ASSIM:
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+// export deste arquivo
+namespace App\Http\Controllers;
+
+// imports
+use Illuminate\Http\Request;
+use App\Models\User;
+
+class UserController extends Controller {
+    // '$request' -> é isso que dá um NOME ('$request') a essa variável, que poderá ser usada dentro de 'postSignUp' e 'postSignIn'
+    public function postSignUp(Request $request) {
+        $email = $request['email'];
+        $first_name = $request['first_name'];
+        $password = bcrypt($request['password']);
+
+        $user = new User();
+        $user->email = $email;
+        $user->first_name = $first_name;
+        $user->password = $password;
+
+        $user->save(); //salva o user no banco de dados
+
+
+        return redirect()->back(); //redireciona para a página anterior
+    }
+
+    public function postSignIn(Request $request) {
+
+        $email = $request['email'];
+        $password = $request['password'];
+
+        // $password_is_valid = bcrypt($password)
+
+
+
+
+
+        return redirect()->back();
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> O PROFESSOR NOS EXPLICA QUE NADA DISSO FUNCIONARÁ, NO MOMENTO,
+
+PQ 
+
+AINDA 
+
+NÃO TEMOS NENHUMA DATABASE CONNECTION...
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> bem, se checamos nosso arquivo docker-compose.yaml:
+
+
+
+
+
+
+
+
+
+
+
+version: '3.8'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: 'dockerfiles/nginx.dockerfile'
+    ports:
+      - '8000:80'
+
+    volumes:
+      - './nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro'
+      - './src:/var/www/html'
+    depends_on:
+      - php
+      - mysql
+
+  php:
+    build:
+      context: .
+      dockerfile: 'dockerfiles/php.dockerfile'
+    volumes:
+      - './src:/var/www/html:delegated'
+    ports:
+      - '3000:9000'
+
+  mysql:
+    image: mysql:5.7
+    env_file:
+      - ./env/mysql.env
+
+  composer:
+    build:
+      context: './dockerfiles'
+      dockerfile: composer.dockerfile
+    volumes:
+      - ./src:/var/www/html
+  artisan:
+    build:
+      context: '.'
+      dockerfile: 'dockerfiles/php.dockerfile'
+    volumes:
+      - ./src:/var/www/html
+
+    entrypoint: ['php', '/var/www/html/artisan']
+
+  npm:
+    image: node:14
+
+    working_dir: /var/www/html
+
+    stdin_open: true
+    tty: true
+
+    entrypoint: ['npm']
+
+    volumes:
+      - ./src:/var/www/html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bem, até aí, está tudo certo...
+
+
+
+
+
+
+
+
+
+
+
+
+mas talvez seja 1 boa ideia colocar 1 NAMED VOLUME para a database sql,
+
+para 
+
+
+que os dados não sejam perdidos a cada restart de containers...
+
+
+
+
+
+
+
+
+
+---> consegui, ficou tipo assim:
+
+
+
+
+
+
+
+
+version: '3.8'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: 'dockerfiles/nginx.dockerfile'
+    ports:
+      - '8000:80'
+
+    volumes:
+      - './nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro'
+      - './src:/var/www/html'
+    depends_on:
+      - php
+      - mysql
+
+  php:
+    build:
+      context: .
+      dockerfile: 'dockerfiles/php.dockerfile'
+    volumes:
+      - './src:/var/www/html:delegated'
+    ports:
+      - '3000:9000'
+
+  mysql:
+    image: mysql:5.7
+    env_file:
+      - ./env/mysql.env
+    volumes:
+      - 'my-sql-volume:/var/lib/mysql'
+
+  composer:
+    build:
+      context: './dockerfiles'
+      dockerfile: composer.dockerfile
+    volumes:
+      - ./src:/var/www/html
+  artisan:
+    build:
+      context: '.'
+      dockerfile: 'dockerfiles/php.dockerfile'
+    volumes:
+      - ./src:/var/www/html
+
+    entrypoint: ['php', '/var/www/html/artisan']
+
+  npm:
+    image: node:14
+
+    working_dir: /var/www/html
+
+    stdin_open: true
+    tty: true
+
+    entrypoint: ['npm']
+
+volumes:
+  my-sql-volume:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  certo...
+
+
+
+
+
+
+
+
+
+
+
+  nossos containers estão up...
+
+
+
+
+
+
+
+
+
+
+
+
+  --> o professor está usando 'vagrant',
+
+  mas nós estamos usando o docker para testar tudo isso....
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> tento rodar este comando 'docker-compose exec artisan php migrate'...
+
+
+
+
+
+
+
+
+
+
+
+mas isso falha...
+
+
+
+
+
+
+--> preciso especificar, antes de 'artisan',
+
+o __CONTAINER__ DE 'php' (em que estamos rodando nossa image)...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TIPO ASSIM:
+
+
+
+
+
+
+
+
+
+PS A:\projeto19-laravel\projeto-exemplo> docker-compose exec php php artisan migrate      
+
+   INFO  Preparing database.
+
+  Creating migration table ................................................... 87ms DONE
+
+   INFO  Running migrations.  
+
+  2019_12_14_000001_create_personal_access_tokens_table ...................... 95ms DONE
+  2023_06_27_124706_create_users_table ....................................... 19ms DONE
+
+PS A:\projeto19-laravel\projeto-exemplo> 
+
+
+
+
+
+
+OK...
+
+
+
+
+
+
+
+
+ISSO RODOU AS MIGRATIONS...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+podemos visualizar nossa database sql,
+
+
+
+
+
+
+BASTA ENTRAR NO CONTAINER 'mysql'
+
+
+
+e rodar comandos contra ele...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> rodei vários comandos:
+
+
+PS A:\projeto19-laravel\projeto-exemplo> docker ps                    
+CONTAINER ID   IMAGE                    COMMAND                  CREATED         STATUS         PORTS                    NAMES
+093b1ecd56c8   projeto-exemplo-server   "/docker-entrypoint.…"   4 minutes ago   Up 4 minutes   0.0.0.0:8000->80/tcp     projeto-exemplo-server-1
+9c24fa0616a9   mysql:5.7                "docker-entrypoint.s…"   4 minutes ago   Up 4 minutes   3306/tcp, 33060/tcp      projeto-exemplo-mysql-1 
+f7e83c21da30   projeto-exemplo-php      "docker-php-entrypoi…"   44 hours ago    Up 4 minutes   0.0.0.0:3000->9000/tcp   projeto-exemplo-php-1   
+PS A:\projeto19-laravel\projeto-exemplo> docker container attach -it projeto-exemplo-php-1
+unknown shorthand flag: 'i' in -it   
+See 'docker container attach --help'.
+PS A:\projeto19-laravel\projeto-exemplo> docker container attach -it projeto-exemplo-php-1^C
+PS A:\projeto19-laravel\projeto-exemplo> docker container attach --help
+
+Usage:  docker container attach [OPTIONS] CONTAINER
+
+Attach local standard input, output, and error streams to a running container
+
+Options:
+      --detach-keys string   Override the key sequence for detaching a       
+                             container
+      --no-stdin             Do not attach STDIN
+      --sig-proxy            Proxy all received signals to the process       
+                             (default true)
+PS A:\projeto19-laravel\projeto-exemplo> docker container help
+
+Usage:  docker container COMMAND
+
+Manage containers
+
+Commands:
+  attach      Attach local standard input, output, and error streams to a running container
+  commit      Create a new image from a container's changes
+  cp          Copy files/folders between a container and the local filesystem
+  create      Create a new container
+  exec        Run a command in a running container
+  export      Export a container's filesystem as a tar archive
+  kill        Kill one or more running containers
+  logs        Fetch the logs of a container
+  ls          List containers
+  pause       Pause all processes within one or more containers
+  port        List port mappings or a specific mapping for the container
+  prune       Remove all stopped containers
+  restart     Restart one or more containers
+  rm          Remove one or more containers
+  run         Run a command in a new container
+  start       Start one or more stopped containers
+  stats       Display a live stream of container(s) resource usage statistics
+  stop        Stop one or more running containers
+  unpause     Unpause all processes within one or more containers
+  update      Update configuration of one or more containers
+  wait        Block until one or more containers stop, then print their exit codes
+
+Run 'docker container COMMAND --help' for more information on a command.
+PS A:\projeto19-laravel\projeto-exemplo> docker container attach --help^C
+unknown flag: --it
+See 'docker exec --help'.
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-php-1 
+"docker exec" requires at least 2 arguments.
+See 'docker exec --help'.
+
+Usage:  docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
+Run a command in a running container
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -i -t projeto-exemplo-php-1
+"docker exec" requires at least 2 arguments.
+See 'docker exec --help'.
+
+Usage:  docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
+
+PS A:\projeto19-laravel\projeto-exemplo> docker container exec -i -t projeto-exemplo-php-1
+"docker container exec" requires at least 2 arguments.
+See 'docker container exec --help'.
+
+Usage:  docker container exec [OPTIONS] CONTAINER COMMAND [ARG...]
+
+Run a command in a running container
+$ : O termo '$' não é reconhecido como nome de cmdlet, função, arquivo de script ou programa operável. Verifique a grafia do nome ou, se um caminho tiver sido incluído, veja se o caminho está correto e tente novamente.
+PS A:\projeto19-laravel\projeto-exemplo> $ docker exec -i -t projeto-exemplo-php-1 /bin/bash  
+$ : O termo '$' não é reconhecido como nome de cmdlet, função, arquivo de script ou programa operável. Verifique a grafia do nome ou, se um caminho tiver sido incluído, veja se o caminho está correto e tente novamente.
+No linha:1 caractere:1
++ ~
+    + CategoryInfo          : ObjectNotFound: ($:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException                                        perável. Verifique a grafia do nome ou, se um caminho tiver sido incluído, veja se o caminho está correto e tente novamente.
+
+PS A:\projeto19-laravel\projeto-exemplo> $ docker exec -it projeto-exemplo-php-1 /bin/bash    
+$ : O termo '$' não é reconhecido como nome de cmdlet, função, arquivo de script ou programa operável. Verifique a grafia do nome ou, se um caminho tiver sido incluído, veja se o caminho está correto e tente novamente.
+No linha:1 caractere:1
++ $ docker exec -it projeto-exemplo-php-1 /bin/bash
+    + CategoryInfo          : ObjectNotFound: ($:String) [], CommandNotFoundException         perável. Verifique a grafia do nome ou, se um caminho tiver sido incluído, veja se o caminho está correto e tente novamente.
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-php-1 /bin/bash      
+OCI runtime exec failed: exec failed: unable to start container process: exec: "/bin/bash": stat /bin/bash: no such file or directory: unknown
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-php-1 ls
+README.md       composer.lock   public          vendor
+app             config          resources       vite.config.js                                at /bin/bash: no such file or directory: unknown
+artisan         database        routes
+bootstrap       package.json    storage
+composer.json   phpunit.xml     tests
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-php-1 cd .. | ls     
+ls : Não é possível localizar a unidade. Não existe uma unidade com o nome 'OCI runtime exec  
+failed'.
+No linha:1 caractere:47
++                                               ~~
+    + CategoryInfo          : ObjectNotFound: (OCI runtime exec failed:String) [Get-ChildIte  
+    + FullyQualifiedErrorId : DriveNotFound,Microsoft.PowerShell.Commands.GetChildItemComman  
+   d
+ 
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-php-1 cd ..; ls      
+OCI runtime exec failed: exec failed: unable to start container process: exec: "cd": executabl
+
+    Diretório: A:\projeto19-laravel\projeto-exemplo
+
+----                 -------------         ------ ----
+d-----        25/06/2023     14:59                dockerfiles
+d-----        25/06/2023     14:59                env
+d-----        25/06/2023     14:57                nginx
+d-----        25/06/2023     14:59                src
+-a----        27/06/2023     10:46           1095 docker-compose.yaml
+
+
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-php-1 cd ..          
+OCI runtime exec failed: exec failed: unable to start container process: exec: "cd": executable file not found in $PATH: unknown
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-php-1 ls             
+README.md       composer.lock   public          vendor
+app             config          resources       vite.config.js
+artisan         database        routes
+bootstrap       package.json    storage
+composer.json   phpunit.xml     tests
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-php-1 ls app
+Console     Exceptions  Http        Models      Providers
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-php-1 psql  
+OCI runtime exec failed: exec failed: unable to start container process: exec: "psql": executable file not found in $PATH: unknown
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-php-1 cat package.json
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build"
+    },
+        "axios": "^1.1.2",
+        "laravel-vite-plugin": "^0.7.5",
+        "vite": "^4.0.0"
+    }
+}
+PS A:\projeto19-laravel\projeto-exemplo> docker ps
+    PORTS                    NAMES
+093b1ecd56c8   projeto-exemplo-server   "/docker-entrypoint.…"   11 minutes ago   Up 11 minutes   0.0.0.0:8000->80/tcp     projeto-exemplo-server-1
+9c24fa0616a9   mysql:5.7                "docker-entrypoint.s…"   11 minutes ago   Up 11 minutes   3306/tcp, 33060/tcp      projeto-exemplo-mysql-1
+f7e83c21da30   projeto-exemplo-php      "docker-php-entrypoi…"   44 hours ago     Up 11 minutes   0.0.0.0:3000->9000/tcp   projeto-exemplo-php-1
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-mysql ls
+Error: No such container: projeto-exemplo-mysql
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-mysql-1 ls
+bin   docker-entrypoint-initdb.d  home   media  proc  sbin  tmp
+boot  entrypoint.sh               lib    mnt    root  srv   usr
+dev   etc                         lib64  opt    run   sys   var
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-mysql-1 psql
+OCI runtime exec failed: exec failed: unable to start container process: exec: "psql": executable file not found in $PATH: unknown
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-mysql-1 bash
+bash-4.2# psql
+bash: psql: command not found
+bash-4.2# SELECT * FROM 'users';
+bash: SELECT: command not found
+bash-4.2# exit
+exit
+PS A:\projeto19-laravel\projeto-exemplo> docker exec -it projeto-exemplo-mysql-1 bash
+bash-4.2# mysql
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+bash-4.2# mysql -u homestead -p password
+Enter password: 
+ERROR 1044 (42000): Access denied for user 'homestead'@'%' to database 'password'
+bash-4.2# mysql -u homestead             
+ERROR 1045 (28000): Access denied for user 'homestead'@'localhost' (using password: NO)
+bash-4.2# mysql -u homestead
+ERROR 1045 (28000): Access denied for user 'homestead'@'localhost' (using password: NO)
+bash-4.2# mysql -u homestead -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 7
+Server version: 5.7.42 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> SELECT * FROM 'users';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''users'' at line 1
+mysql> SELECT * FROM "users";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"users"' at line 1
+mysql> SELECT * FROM users;
+ERROR 1046 (3D000): No database selected
+mysql> help
+
+For information about MySQL products and services, visit:
+   http://www.mysql.com/
+For developer information, including the MySQL Reference Manual, visit:
+   http://dev.mysql.com/
+To buy MySQL Enterprise support, training, or other products, visit:
+   https://shop.mysql.com/
+
+List of all MySQL commands:
+Note that all text commands must be first on line and end with ';'
+?         (\?) Synonym for `help'.
+clear     (\c) Clear the current input statement.
+connect   (\r) Reconnect to the server. Optional arguments are db and host.
+delimiter (\d) Set statement delimiter.
+edit      (\e) Edit command with $EDITOR.
+ego       (\G) Send command to mysql server, display result vertically.
+exit      (\q) Exit mysql. Same as quit.
+go        (\g) Send command to mysql server.
+help      (\h) Display this help.
+nopager   (\n) Disable pager, print to stdout.
+notee     (\t) Don't write into outfile.
+pager     (\P) Set PAGER [to_pager]. Print the query results via PAGER.
+print     (\p) Print current command.
+prompt    (\R) Change your mysql prompt.
+quit      (\q) Quit mysql.
+rehash    (\#) Rebuild completion hash.
+source    (\.) Execute an SQL script file. Takes a file name as an argument.
+status    (\s) Get status information from the server.
+system    (\!) Execute a system shell command.
+tee       (\T) Set outfile [to_outfile]. Append everything into given outfile.
+use       (\u) Use another database. Takes database name as argument.
+charset   (\C) Switch to another charset. Might be needed for processing binlog with multi-byte charsets.
+warnings  (\W) Show warnings after every statement.
+nowarning (\w) Don't show warnings after every statement.
+resetconnection(\x) Clean session context.
+
+For server side help, type 'help contents'
+
+mysql> status
+--------------
+mysql  Ver 14.14 Distrib 5.7.42, for Linux (x86_64) using  EditLine wrapper
+
+Connection id:          7
+Current database:
+Current user:           homestead@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server version:         5.7.42 MySQL Community Server (GPL)
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    latin1
+Db     characterset:    latin1
+Client characterset:    latin1
+Conn.  characterset:    latin1
+UNIX socket:            /var/run/mysqld/mysqld.sock
+Uptime:                 15 min 39 sec
+
+Threads: 1  Questions: 52  Slow queries: 0  Opens: 110  Flush tables: 1  Open tables: 101  Queries per second avg: 0.055
+--------------
+
+mysql> SELECT * FROM users;
+ERROR 1046 (3D000): No database selected
+mysql> SELECT * FROM migrations
+    -> ^C
+mysql> SELECT * FROM migrations;
+ERROR 1046 (3D000): No database selected
+mysql> SHOW DATABASES
+    ->
+    -> ^C
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| homestead          |
++--------------------+
+2 rows in set (0.00 sec)
+
+mysql> USE homestead
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> SELECT * FROM migrations;
++----+-------------------------------------------------------+-------+
+| id | migration                                             | batch |
++----+-------------------------------------------------------+-------+
+|  1 | 2019_12_14_000001_create_personal_access_tokens_table |     1 |
+|  2 | 2023_06_27_124706_create_users_table                  |     1 |
++----+-------------------------------------------------------+-------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM users;
+Empty set (0.00 sec)
+
+mysql>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ok....
+
+
+
+
+
+
+
+as migrations rodaram, está tudo certo...
+
+
+
+
+
+
+
+
+
+
+---
+
+
+
+
+
+
+
+TEMOS A TABLE DE 'migrations',
+
+
+e a 
+
+
+table 
+
+de 
+
+
+'users'...
+
+
+
+
+
+
+
+--> na table de migrations, temos information sobre todas 
+
+as migrations que 
+
+foram rodadas...
+
+
+
+
+
+
+
+
+
+
+--> usamos essa info se quisermos resettar nossa database...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OK...
+
+
+
+
+
+
+
+
+AGORA DEVEMOS HOOKAR NOSSA SIGNUP FORM A ESSA FUNCTION...
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> é por isso que o professor vai até o arquivo 'web.php',
+
+
+
+
+
+QUE TEM ESTE CÓDGO:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+
+
+
+
+
+
+
+
+
+-----------------------------
+
+
+
+
+
+
+
+
+O PROFESSOR ADICIONA UMA NOVA ROUTE,
+
+
+
+
+
+
+
+
+tipo assim:
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+
+Route::post('/signup', [
+    
+])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OK... é uma route de tipo 'post',
+
+
+E__ VAMOS PASSAR 1 ARRAY COMO SEGUNDO PARÂMETRO...
+
+
+
+
+
+
+
+NESSE ARRAY,
+
+O PROFESSOR 
+
+
+
+DEFINE 
+
+
+
+A KEY DE 'uses' --> 
+
+
+
+
+
+
+
+
+
+--> 'uses' --> ESSA KEY É USADA __ PARA _ 
+
+
+
+DEFINIR ____ O CONTROLLER _ QUE USAREMOS...
+
+
+
+
+
+
+
+--> no caso, usaremos o controller de 
+
+
+'UserController'... -> 
+
+
+
+
+E, NESSE CONTROLLER, USAREMOS 
+
+
+A FUNCTION DE 
+
+
+'@postSignUp'...
+
+
+
+
+
+
+EX:
+
+
+
+
+
+
+
+
+
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+
+Route::post('/signup', [
+    'uses' => 'UserController@postSignUp' //com isso, definimos que É ESSE CONTROLLER QUE SERÁ USADO, A PARTIR DE QUAISQUER POST REQUESTS A ESSA ROUTE DE '/signup'...
+]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OK...
+
+
+
+
+
+
+
+
+
+
+
+DEPOIS DISSO, O PROFESSOR 
+
+
+DÁ 1 NOME A ESSA ROUTE... --> COLOCAMOS 1 NOME A ESSA ROUTE JUSTAMENTE 
+
+
+PARA FACILITAR 
+
+
+SEU USO AO LONGO DO APP...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ex:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+
+Route::post('/signup', [
+    'uses' => 'UserController@postSignUp', //com isso, definimos que É ESSE CONTROLLER QUE SERÁ USADO, A PARTIR DE QUAISQUER POST REQUESTS A ESSA ROUTE DE '/signup'...
+    'as' => 'signup' // com isso, definimos 1 alias para essa route, que pode ser usado AO LONGO DE NOSSO APP INTEIRO...
+]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------
+
+
+
+
+
+
+
+
+
+
+DE VOLTA À VIEW DE 'welcome', em que temos as forms,
+
+
+
+O PROFESSOR 
+
+
+
+
+COLOCA 1 ACTION 
+
+
+
+NO BLADE,
+
+
+
+
+lá em '<form>'....
+
+
+
+
+
+
+tipo assim:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <!--  usamos a template expression, na 'action', para disparar requests contra nosso backend...-->
+            <form action="{{  }}" method="POST">
+                <div class="form-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" name="email" id="email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="text">First Name</label>
+                    <input type="text" name="first_name" id="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+
+
+
+
+
+
+
+
+
+----------------------------------
+
+
+
+
+
+
+
+
+
+
+certo...
+
+
+
+
+
+
+
+
+
+USAMOS AQUELA TEMPLATE EXPRESSION,
+
+E AÍ 
+
+
+
+
+
+
+
+USAMOS O COMANDO DE 'route()',
+
+
+
+próprio do laravel,
+
+
+
+PARA QUE NESSA ACTION,
+
+
+
+
+
+
+
+
+1 LINK SEJA 'FILLED IN',
+
+
+
+QUE LEVE À NOSSA ROUTE 
+
+
+
+
+de 'signup'...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(
+
+    USAMOS O MESMO NOME 'signup' QUE DEFINIMOS 
+    LÁ 
+
+
+
+    em 'web.php'...
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+FICA TIPO ASSIM:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <form action="{{ route('signup') }}" method="POST">
+                <div class="form-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" name="email" id="email" class="form-control">
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+NO MOMENTO, VAMOS RECEBER 1 ERRO, SIM...
+
+
+
+
+
+
+
+
+
+
+--> MAS PQ?
+
+
+
+
+
+
+
+
+--> ISSO TUDO PODE PARECER CORRETO, SIM,
+
+
+
+
+
+MAS _ _ESTAMOS COM ALGO FALTANDO --> PRECISAMOS 
+
+
+DE 
+
+
+1 
+
+CERTO HIDDEN FIELD,
+
+
+__ QUE É NECESSÁRIO, QUANDO USAMOS O LARAVEL --> 
+
+
+
+
+
+
+
+
+ISSO PQ O LARAVEL TEM 1 BUILT-IN PROTECTION 
+
+
+CONTRA 
+
+
+
+CSRF (cross-site-request-forgery) (
+
+    SE ALGUÉM PEGA SUA SESSION KEY,
+
+    ESSA PESSOA PODERIA 
+
+    SER CAPAZ __ DE USAR SUA AUTH....
+)
+
+
+
+
+
+
+
+
+
+--> PARA TERMOS 1 PROTECTION EXTRA,
+
+
+
+PARA CADA REQUEST __ QUE ENVIAMOS,
+
+
+
+
+PRECISAMOS DE 1 HIDDEN INPUT FIELD...
+
+
+
+
+
+
+
+
+
+
+
+
+--> para isso, precisamos escrever este hidden input field:
+
+
+
+
+
+
+
+<input type="hidden" name="_token" value={{ Session::token()}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+FICA TIPO ASSIM:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <h3>Sign Up</h3>
+            {{-- <form action="#" method="POST"> --}}
+                <!--  usamos a template expression, na 'action', para disparar requests contra nosso backend...-->
+                <!-- isso vai nos levar até a route de 'signup', conforme definido em 'web.php'... -->
+                <form action="{{ route('signup') }}" method="POST">
+                <div class="form-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" name="email" id="email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="text">First Name</label>
+                    <input type="text" name="first_name" id="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" class="form-control">
+                </div>
+                <!-- PRECISAMOS DESSE INPUT ESPECIAL, HIDDEN... é uma feature do laravel, usada contra CSRF attacks... é obrigatória -->
+                <input type="hidden" name="_token" value={{ Session::token()}}>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+
+
+
+----------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+essa sintaxe,
+
+
+
+
+
+
+'Session::token()',
+
+
+
+
+
+
+
+ELA NÃO ESTÁ ACESSANDO 
+
+1 
+
+STATIC METHOD EM ALGUMA CLASS DE 'Session',
+
+
+E SIM 
+
+
+É UMA 
+
+
+'FACADE'...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> O LARAVEL USA UM MONTE DESSAS 'FACADES'...
+
+
+
+
+
+
+
+
+
+
+
+FACADES SÃO BASICAMENTE SHORTCUTS A 
+
+
+__OUTRAS FUNCTIONS,
+
+
+
+
+SÃO BASICAMENTE HELPER FUNCTIONS...
+
+
+
+
+
+
+
+
+--> TEMOS DIFERENTES OBJECTS, COMO 'Session',
+
+
+
+EM QUE PODEMOS ACESSAR ESSAS HELPER FUNCTIONS...
+
+
+
+
+
+
+
+
+--> E UM MONTE 
+
+DESSAS FACADES/HELPER FUNCTIONS 
+
+
+
+
+
+JÁ SÃO BUILT-IN NAS NOSSAS VIEWS (blade templating engine),
+
+O QUE 
+
+QUER DIZER QUE 
+
+
+
+
+
+PODEMOS ACESSAR ESSA TOKEN DE 'Session',
+
+
+
+
+
+MESMO O OBJECT SESSION NÃO ESTANDO INJETADO NESSA FILE...
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> O QUE ISSO FAZ, NO CASO, 
+É 
+
+
+FETCHEAR O TOKEN DE NOSSA CURRENT SESSION,
+
+QUE 
+
+É 
+
+ARMAZENADA NESSE INPUT FIELD,
+
+QUE 
+É 
+
+ENVIADO NO NOSSO REQUEST...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-> BEM, E NÃO TEMOS QUE CHECAR NADA MANUALMENTE --> 
+
+
+
+
+ISSO TUDO É FEITO PELO LARAVEL AUTOMATICAMENTE...
+
+
+
+
+
+
+
+
+
+
+
+--> AGORA DEVEMOS CHECAR SE ISSO FUNCIONA...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> OK....
+
+
+
+
+
+colocamos info nos input fields...
+
+
+
+
+
+
+
+
+
+
+
+bem, ganhei 1 error:
+
+
+
+
+
+
+
+The stream or file "/var/www/html/storage/logs/laravel.log" 
+could not be opened in append mode: Failed to open stream: 
+Permission denied The exception occurred while attempting to log:
+ The stream or file "/var/www/html/storage/logs/laravel.log"
+
+
+
+
+
+
+
+
+
+
+
+acho que é um erro do DOCKER, 
+
+
+
+e não 
+
+
+
+
+do laravel...
+
+
+
+
+
+
+
+ok... consertei o erro de logs, com este comando:
+
+
+
+docker exec -it projeto-exemplo-php-1 sudo chmod o+w ./storage/ -R
+
+
+
+
+
+
+
+
+
+
+
+
+certo...
+
+
+
+
+
+
+
+
+
+mas então recebi outro erro:
+
+
+
+Target class [UserController] does not exist.
+
+
+
+
+
+
+
+
+
+
+OK...
+
+
+
+
+acho que agora as coisas funcionarão...
+
+
+
+
+
+
+
+
+
+
+
+
+
+ok.... parece que não houve erro...
+
+
+
+
+
+
+
+e parece que o user foi realmente criado...
+
+
+
+
+
+
+
+vou checar, com este comando:
+
+
+
+
+
+
+
+
+
+
+
+
+
+docker exec -it projeto-exemplo-mysql-1 bash
+
+
+
+
+depois isto:
+
+
+
+bash-4.2# mysql -u homestead -p
+Enter password:
+
+
+
+
+
+
+
+
+
+depois isto:
+
+
+
+
+mysql> SHOW DATABASES
+    -> ;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| homestead          |
++--------------------+
+2 rows in set (0.00 sec)
+
+mysql>
+
+
+
+
+
+
+
+
+
+
+DEPOIS ISTO:
+
+
+
+
+mysql> use homestead
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql>
+
+
+
+
+
+
+
+
+
+DEPOIS ISTO:
+
+
+
+
+
+
+mysql> SELECT * FROM users;
++----+---------------------+---------------------+---------------------+------------+--------------------------------------------------------------+----------------+
+| id | created_at          | updated_at          | email               | first_name | password                                                     | remember_token |
++----+---------------------+---------------------+---------------------+------------+--------------------------------------------------------------+----------------+
+|  1 | 2023-06-27 16:54:02 | 2023-06-27 16:54:02 | exemplo@exemplo.com | exemplo123 | $2y$10$mvEO3ZBwFBLn8lHEQN/8nuJ/8PUKHqkhteG3a.RBXFuOaHfQfQPHm | NULL           |
++----+---------------------+---------------------+---------------------+------------+--------------------------------------------------------------+----------------+
+1 row in set (0.00 sec)
+
+mysql>
+
+
+
+
+
+
+
+
+
+
+
+ok... funcionou....
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONTINUANDO A AULA...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+o professor encontrou um erro... -> ele diz que 
+
+
+isso aconteceu 
+
+pq 
+
+
+
+
+
+DEVEMOS COLOCAR TODAS AS ROUTES DENTRO DE 1 MESMO GROUP,
+
+LÁ 
+
+NO MIDDLEWARE 
+
+
+GROUP DE 'web',
+
+tipo assim (também a route de '/', no caso):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+// controllers
+ use App\Http\Controllers;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+
+Route::post('/signup',
+// [
+    // 'uses' => 'UserController@postSignUp', //com isso, definimos que É ESSE CONTROLLER QUE SERÁ USADO, A PARTIR DE QUAISQUER POST REQUESTS A ESSA ROUTE DE '/signup'...
+    // 'as' => 'signup' // com isso, definimos 1 alias para essa route, que pode ser usado AO LONGO DE NOSSO APP INTEIRO...
+
+// ]
+//  [Controllers::class, 'signup']
+'App\Http\Controllers\UserController@postSignUp'
+);
+
+
+Route::post('/signin',
+// [
+//     'uses' => 'UserController@postSignIn',
+//     'as' => 'signin'
+// ]
+// 'UserController@postSignIn'
+'App\Http\Controllers\UserController@postSignIn'
+// [Controllers::class, 'signin']
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+como essa é a sintaxe NOVA do laravel,
+
+não temos esse problema...
+
+
+
+
+
+
+
+--> ESSAS ROUTES RECEBEM CSRF PROTECTION...
+
+
+
+
+
+
+-> VC DEVE USAR ESSA PARTE DE 'web.php' 
+
+
+
+COM AS FRONTEND VIEWS...
+
+
+
+
+
+
+
+
+
+--> NO RESTO DAS COISAS,
+
+
+COM RESTFUL SERVICES,,
+
+
+VC USARIA 
+
+
+o arquivo de 'api.php' ...
+
+
+
+
+
+
+
+
+
+
+
+
+RESTFUL SERVICES NÃO POSSUEM SESSIONS,
+
+
+
+O QUE QUER DIZER QUE 
+
+
+USARÍAMOS O ARQUIVO DE 'api.php'...
+
+
+
+
+
+
+
+
+
+
+COMO AQUI __ TEMOS UM NORMAL APP,
+
+COM SESSIONS,
+
+SOMOS FORÇADOS 
+
+
+A USAR 
+
+
+ESSE MIDDLEWARE DE 'web',
+
+
+
+PARA TODAS AS ROUTES QUE 
+
+
+
+__ SE ENVOLVEM COM SESSIONS...
+
+
+
+
+
+
+TENTAMOS ISSO DE NOVO... E FUNCIONA...
