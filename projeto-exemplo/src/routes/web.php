@@ -2,8 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-// controllers
- use App\Http\Controllers;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,23 +20,32 @@ Route::get('/', function () {
 });
 
 
-Route::post('/signup',
-// [
+Route::get(
+    '/dashboard',
+    'App\Http\Controllers\UserController@getDashboard'
+)->name('dashboard');
+
+
+
+Route::post(
+    '/signup',
+    // [
     // 'uses' => 'UserController@postSignUp', //com isso, definimos que É ESSE CONTROLLER QUE SERÁ USADO, A PARTIR DE QUAISQUER POST REQUESTS A ESSA ROUTE DE '/signup'...
     // 'as' => 'signup' // com isso, definimos 1 alias para essa route, que pode ser usado AO LONGO DE NOSSO APP INTEIRO...
 
-// ]
+    // ]
 //  [Controllers::class, 'signup']
-'App\Http\Controllers\UserController@postSignUp'
+    'App\Http\Controllers\UserController@postSignUp'
 );
 
 
-Route::post('/signin',
-// [
+Route::post(
+    '/signin',
+    // [
 //     'uses' => 'UserController@postSignIn',
 //     'as' => 'signin'
 // ]
 // 'UserController@postSignIn'
-'App\Http\Controllers\UserController@postSignIn'
-// [Controllers::class, 'signin']
+    'App\Http\Controllers\UserController@postSignIn'
+    // [Controllers::class, 'signin']
 );

@@ -49,6 +49,7 @@ PATH ATÉ O SEU ARQUIVO, para definir que vamos inserir coisas deste arquivo 'we
                     <label for="password">Password</label>
                     <input type="password" name="password" id="password" class="form-control">
                 </div>
+                <input type="hidden" name="_token" value={{ Session::token()}}>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>

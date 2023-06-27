@@ -1,0 +1,1843 @@
+
+
+
+
+
+
+
+
+
+
+
+--> 
+
+
+
+
+
+
+VEREMOS MAIS SOBRE O LARAVEL...
+
+
+
+
+
+
+NA ÚLTIMA PARTE,
+
+
+CRIAMOS A LÓGICA PARA FAZER O SIGN DE USERS (o create do user no database)...
+
+
+
+
+
+
+
+
+
+
+
+--> O SIGNUP REQUEST FUNCIONA,
+
+
+O USER É CRIADO NA DATABASE...
+
+
+
+
+
+
+
+
+
+
+-> AGORA VEREMOS O 'USER LOGIN' (OU SEJA, CHECAR SE ELE JÁ ESTÁ SIGNED IN),
+
+
+
+
+
+
+
+E TAMBÉM 
+
+A ROUTE 
+
+DE LOGIN COM AQUELE PASSWORD..
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> TAMBÉM VAMOS FAZER O REDIRECT DOS 
+
+
+'LOGGED-IN USERS'
+ 
+ E 
+
+ 'SIGNED-UP USERS'
+
+
+
+ A 
+
+ UMA DASHBOARD PAGE...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> DEVEMOS COMEÇAR...
+
+
+
+
+
+
+
+
+
+
+
+--> A PRIMEIRA COISA 
+
+
+QUE DEVEMOS FAZER É MUDAR __ 1 POUCO O NOSSO USER MODEL...
+
+
+
+
+
+
+
+
+
+
+
+O USER MODEL ESTÁ ASSIM:
+
+
+
+
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    use HasFactory;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> DENTRO DISSO,
+
+
+PRECISAMOS 
+
+USAR O 'AUTHENTICABLE CONTRACT'...
+
+
+
+
+
+
+
+
+
+
+--> É UM 'CONTRACT' PROVIDENCIADO PELO FRAMEWORK LARAVEL QUE 
+
+BASICAMENTE 
+
+
+NOS DEIXA USAR AUTH HELPERS DO LARAVEL... --> USAMOS A 'AUTH CLASS'
+
+
+
+PARA 
+
+__ FACILMENTE AUTENTICAR USERS... (
+
+
+
+    aí não precisamos 
+
+    fazer coisas como 'verify se o password é igual, etc etc'...
+
+)
+
+
+
+
+
+
+
+
+
+
+
+
+--> PARA ISSO, DEVEMOS 
+
+IMPLEMENTAR O CONTRACT DE 'Authenticable'...
+
+
+
+
+
+
+--> MAS PRIMEIRO DEVEMOS IMPORTAR 
+
+ESSE PACOTE
+
+
+
+
+
+
+
+
+TIPO ASSIM:
+
+
+
+
+
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+// PACOTE BUILT-IN DE AUTHENTICATION DO LARAVEL.
+use Illuminate\Contracts\Auth\Authenticable;
+
+class User extends Model implements Authenticable
+{
+    use HasFactory;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OK... E AGORA PRECISAMOS IMPLEMENTAR OS METHODS QUE 
+
+
+ESSE CONTRACT/INTERFACE 
+
+
+
+PRECISA, nessa class de 'User'...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+A SORTE É QUE 
+
+
+
+
+___ O LARAVEL NOS PROVIDENCIA COM 1 TRAIT MT ÚTIL,
+
+
+O TRAIT 
+
+
+
+DE 
+
+'Authenticable' (
+
+
+
+1 'TRAIT' É DIFERENTE DE 1 CONTRACT..
+
+
+
+
+
+
+
+
+O CONTRACT DE AUTHENTICABLE NÃO É A MESMA COISA QUE 
+
+
+O 
+
+
+'TRAIT' de authenticable...
+
+)
+
+
+
+
+
+
+
+
+
+
+TRAIT --> SÃO BASICAMENTE BUNDLES DE FUNCTIONS,
+
+QUE PODEMOS IMPORTAR EM QUALQUER CLASS QUE CRIAMOS,
+
+
+
+QUE PODEMOS USAR __ PARA __ _'RESOLVE' ESSE CONTRACT DE 'Authenticable'...
+
+
+
+
+
+
+
+
+
+
+
+EX:
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+// CONTRACT DE AUTHENTICATION DO LARAVEL... (é tipo uma INTERFACE. Precisa ser satisfeita)
+use Illuminate\Contracts\Auth\Authenticable;
+
+//satisfazemos a interface de 'Authenticable' por meio do __TRAIT__ de 'Authenticable', que também é built-in no laravel.
+
+
+class User extends Model implements Authenticable
+{
+    use Illuminate\Auth\Authenticable; //satisfazemos a interface de 'Authenticable' por meio do __TRAIT__ de 'Authenticable', que também é built-in no laravel.
+    use HasFactory;
+}
+
+
+
+
+
+
+-------------------------
+
+
+
+
+
+
+
+
+CERTO...
+
+
+
+
+
+
+
+
+
+
+esse 
+
+
+'''     use Illuminate\Auth\Authenticable; ''''
+
+
+
+
+
+É TUDO DE QUE PRECISAMOS 
+
+PARA 
+
+
+fazer a authentication funcionar...
+
+
+
+
+
+
+
+
+é assim que o laravel facilita 
+
+
+
+
+
+O 'MAKE' DE QUALQUER 1 DE NOSSOS MODELS, CRIADOS POR NÓS,
+
+
+
+
+
+EM _ COISAS AUTHENTICATABLE...
+
+
+
+
+
+
+
+
+EX:
+
+
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+// CONTRACT DE AUTHENTICATION DO LARAVEL... (é tipo uma INTERFACE. Precisa ser satisfeita)
+use Illuminate\Contracts\Auth\Authenticatable;
+
+//satisfazemos a interface de 'Authenticable' por meio do __TRAIT__ de 'Authenticable', que também é built-in no laravel.
+
+
+class User extends Model implements Authenticatable
+{
+    use Illuminate\Auth\Authenticable; //satisfazemos a interface de 'Authenticable' por meio do __TRAIT__ de 'Authenticable', que também é built-in no laravel.
+    use HasFactory;
+}
+
+
+
+
+
+--------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+com isso, acabamos...
+
+
+
+
+
+
+só precisávamos 
+
+
+
+fazer isso para _ SERMOS CAPAZES DE AUTENTICAR NOSSOS USERS...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> E É CLARO QUE PODERÍAMOS USAR QUALQUER MODULE/OBJECT AQUI,
+
+
+
+PODERIA SER 'DOG' EM VEZ DE 'USER',
+
+
+
+
+
+
+
+QUALQUER COISA FUNCIONARIA... --> poderíamos então usar o 'dog' como nossa class de user,
+
+
+
+sem nenhum problema..
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> MAS SE UTILIZÁSSEMOS OUTRO NOME, QUE NÃO FOSSE 'user',
+
+SERIA NECESSÁRIO REALIZAR UMA OUTRA PEQUENA MUDANÇA,
+
+
+LÁ NO ARQUIVO 
+
+'auth.php',
+
+no folder 'config' 
+de nosso projeto...
+
+
+
+
+
+
+
+
+
+temos este código:
+
+
+
+
+
+
+
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+
+        // 'users' => [
+        //     'driver' => 'database',
+        //     'table' => 'users',
+        // ],
+    ],
+
+
+
+
+
+
+
+
+
+
+
+
+--> ESTE TRECHO DEVE SER MUDADO...
+
+
+
+se vc quiser outra coisa, outro nome,
+
+
+
+
+devemos mudar o  'model' => ...
+
+
+
+
+
+
+
+--> 'ELOQUENT' --> É O DRIVER 
+
+PROVIDENCIADO PELO LARAVEL,
+
+O 'ORM' DO LARAVEL... 
+
+
+
+
+
+
+
+
+(
+
+    ORM --> A MANEIRA DE FACILMENTE ACESSAR DATABASE TABLES 
+    ATRÁS DE NOSSOS MODULES...
+
+)
+
+
+
+
+
+
+-->
+
+
+
+e na key de 'model' => ,
+
+
+
+
+ESPECIFICAMOS O MODEL QUE USAMOS PARA AUTHENTICATION QUANDO 
+
+
+USAMOS __ A 'FACADE'
+
+
+
+de 'Auth' PARA _ ACESSAR _ _TODOS ESSES AUTHENTICATION HELPER METHODS 
+
+
+OFERECIDOS PELO LARAVEL...
+
+
+
+
+
+
+
+-> POR DEFAULT, ISSO FICA COMO 
+
+'Auth\User::class',
+
+
+
+
+
+
+
+
+
+MAS SE QUISERMOS OUTRA COISA,
+
+
+
+
+TEREMOS DE ESCREVER ASSIM:
+
+
+
+
+
+
+'model' => app\Dog::class'
+
+
+
+
+
+
+
+
+
+
+CERTO...
+
+
+
+
+
+
+
+
+
+
+
+caso contrário, isso não funcionaria,
+
+
+
+pq o negócio procuraria por 1 model de `User` com o contract de authenticable 
+
+implementado... e nunca encontraria, pq é o nosso dog que está com esse contract...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+certo... com o user preparado, voltamos ao controller de ''UserController''....
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> A PRIMEIRA COISA QUE QUEREMOS FAZER É REDIRECIONARMOS O USER AO DASHBOARD SE 
+
+ELE ESTIVER LOGGED IN... --> pq ele vai saber que 
+
+está authenticated...
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> PARA ISSO, DEVEMOS IR ATÉ AS VIEWS, E AÍ CRIAR UMA NOVA VIEW...
+
+
+
+
+
+
+
+
+de nome 
+
+
+
+
+'dashboard.blade.php'...
+
+
+
+
+
+
+
+
+
+EX:
+
+
+
+
+
+
+
+<h1>The Dashboard</h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> CERTO... AÍ LÁ EM 'UserController'
+
+
+VAMOS QUERER REDIRECIONAR 
+
+
+A
+ UMA OUTRA ROUTE,
+
+ A DE 'dashboard',
+
+ que criaremos agora...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ COLOCAMOS O CONTROLLER DE ''getDashboard'',
+
+ TAMBÉM:
+
+
+
+
+
+
+
+
+
+
+
+ <?php
+
+namespace App\Http\Controllers;
+
+// imports
+use Illuminate\Http\Request;
+use App\Models\User;
+
+
+
+
+class UserController extends Controller
+{
+    // '$request' -> é isso que dá um NOME ('$request') a essa variável, que poderá ser usada dentro de 'postSignUp' e 'postSignIn'
+    public function postSignUp(Request $request)
+    {
+        $email = $request['email'];
+        $first_name = $request['first_name'];
+        $password = bcrypt($request['password']);
+
+        $user = new User();
+        $user->email = $email;
+        $user->first_name = $first_name;
+        $user->password = $password;
+
+        $user->save(); //salva o user no banco de dados
+
+
+        return redirect()->back(); //redireciona para a página anterior
+    }
+
+    public function postSignIn(Request $request)
+    {
+
+        $email = $request['email'];
+        $password = $request['password'];
+        // $password_is_valid = bcrypt($password)
+        return redirect()->back();
+    }
+
+    public function getDashboard()
+    {
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+certo...
+
+
+
+
+
+
+
+
+
+
+
+nossas routes estão assim:
+
+
+
+
+
+
+
+
+
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+
+Route::get('/dashboard', function () {
+    'App\Http\Controllers\UserController@getDashboard';
+});
+
+
+
+Route::post(
+    '/signup',
+    // [
+    // 'uses' => 'UserController@postSignUp', //com isso, definimos que É ESSE CONTROLLER QUE SERÁ USADO, A PARTIR DE QUAISQUER POST REQUESTS A ESSA ROUTE DE '/signup'...
+    // 'as' => 'signup' // com isso, definimos 1 alias para essa route, que pode ser usado AO LONGO DE NOSSO APP INTEIRO...
+
+    // ]
+//  [Controllers::class, 'signup']
+    'App\Http\Controllers\UserController@postSignUp'
+);
+
+
+Route::post(
+    '/signin',
+    // [
+//     'uses' => 'UserController@postSignIn',
+//     'as' => 'signin'
+// ]
+// 'UserController@postSignIn'
+    'App\Http\Controllers\UserController@postSignIn'
+    // [Controllers::class, 'signin']
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ok...
+
+
+
+
+
+
+
+
+
+
+NOSSA VIEW DO DASHBOARD SERÁ RETORNADA, PQ NOSSO METHOD NO CONTROLLER ESTÁ ASSIM:
+
+
+
+
+
+
+
+
+
+
+<?php
+
+namespace App\Http\Controllers;
+
+// imports
+use Illuminate\Http\Request;
+use App\Models\User;
+
+
+
+
+class UserController extends Controller
+{
+    // '$request' -> é isso que dá um NOME ('$request') a essa variável, que poderá ser usada dentro de 'postSignUp' e 'postSignIn'
+    public function postSignUp(Request $request)
+    {
+        $email = $request['email'];
+        $first_name = $request['first_name'];
+        $password = bcrypt($request['password']);
+
+        $user = new User();
+        $user->email = $email;
+        $user->first_name = $first_name;
+        $user->password = $password;
+
+        $user->save(); //salva o user no banco de dados
+
+
+        return redirect()->back(); //redireciona para a página anterior
+    }
+
+    public function postSignIn(Request $request)
+    {
+
+        $email = $request['email'];
+        $password = $request['password'];
+        // $password_is_valid = bcrypt($password)
+        return redirect()->back();
+    }
+
+    public function getDashboard()
+    {
+        return view('dashboard');
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+consegui... usei uma sintaxe meio estranha,
+
+mas funciona...
+
+
+
+
+
+
+
+
+essa sintaxe confere 1 nome a minha route (que ainda não tinha nome algum):
+
+
+
+
+
+
+
+Route::get(
+    '/dashboard',
+    'App\Http\Controllers\UserController@getDashboard'
+)->name('dashboard');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CERTO... CONSEGUIMOS O REDIRECT À PAGE DE DASHBOARD...
+
+
+
+
+OK... ISSO FEITO, AGORA VAMOS CRIAR A LÓGICA DE SIGNIN,
+
+NOS CONTROLLERS 
+
+
+
+
+E NAS ROUTES...
+
+
+
+
+
+
+
+
+
+
+
+a lógica está quase implementada...
+
+
+
+
+
+
+
+
+
+
+
+
+a action ficou assim:
+
+
+
+
+
+
+        <div class="col-6 col-md-6">
+            <h3>Sign In</h3>
+            <form action="{{ URL('signin')}}" method="POST">
+                <div class="form-group">
+
+
+
+
+
+
+
+
+
+
+certo...
+
+
+
+
+
+
+
+a route ficou assim:
+
+
+
+
+
+
+
+Route::post(
+    '/signin',
+    'App\Http\Controllers\UserController@postSignIn'
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CERTO...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ISSO FEITO, 
+
+
+
+DENTRO DA FUNCTION DE 'postSignIn',
+
+
+vamos usar a FACADE DE ''AUTH'',
+
+que é OUTRA FACADE QUE VEM COM O LARAVEL...
+
+
+
+
+
+
+
+
+
+
+
+--> ESSA FACADE NOS DEIXA FACILMENTE ALCANÇAR 
+
+
+NOSSOS AUTH HELPER METHODS... 
+
+
+
+
+
+
+acessamos esses helper methods por meio 
+
+
+da facade de ''Auth'',
+
+
+
+QUE É 
+
+
+OBTIDA POR MEIO DO IMPORT DE 
+
+
+
+Illuminate\Support\Facades\Auth ...
+
+
+
+
+
+
+
+DENTRO DESSA FACADE,
+
+
+TEMOS O METHOD DE ''attempt()'',
+
+
+que vai tentar 
+
+
+
+FAZER LOGIN 
+
+
+
+DO USER, COM AS CREDENTIALS PROVIDENCIADAS AQUI COMO 
+
+ARGUMENTOS...
+
+
+
+
+
+TIPO ASSIM:
+
+
+
+
+
+
+
+
+
+    public function postSignIn(Request $request)
+    {
+
+        $email = $request['email'];
+        $password = $request['password'];
+        // $password_is_valid = bcrypt($password)
+
+        Auth::attempt();
+
+        return redirect()->route('dashboard');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+OK.... AGORA PRECISAMOS PASSAR ESSES VALUES...
+
+
+
+
+
+------------------------------
+
+
+
+
+
+
+E, SE O ATTEMPT FALHAR, ISSO  
+
+
+VAI RETORNAR FALSE... 
+
+
+
+
+E SE ISSO 
+
+
+
+SUCCEED, VAI RETORNAR TRUE...
+
+
+
+
+
+
+
+
+
+
+É POR ISSO QUE PODEMOS USAR UM IF CHECK COM ISSO, TIPO ASSIM:
+
+
+
+
+
+
+
+
+
+
+    public function postSignIn(Request $request)
+    {
+
+        $email = $request['email'];
+        $password = $request['password'];
+
+        $is_valid = Auth::attempt(['email' => $email, 'password' => $password]);
+
+        if ($is_valid) {
+            return redirect()->route('dashboard'); ///redirected to dashboard
+        } else {
+            return redirect()->back(); ///else, we return to the starting view
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+A ESTRUTURA DA FUNCTION, PORTANTO, FICOU BEM ASSIM:
+
+
+
+        $email = $request['email'];
+        $password = $request['password'];
+
+        $is_valid = Auth::attempt(['email' => $email, 'password' => $password]);
+
+
+
+
+
+
+
+OK... PODEMOS VER SE ISSO FUNCIONA...
+
+
+
+
+
+
+
+
+
+
+
+
+MAS ANTES DISSO,
+
+TEMOS QUE FAZER OUTRAS COISAS....
+
+
+
+
+
+
+
+--> TEMOS QUE COLOCAR AQUELE INPUT DE TYPE 'hidden'
+
+
+com a token,
+
+também
+
+
+nessa form de login..
+
+
+
+
+
+
+
+
+
+EM TODAS AS FORMS QUE FAZEMOS 'POST',
+
+NO LARAVEL,
+
+
+SEMPRE TEMOS DE COLOCAR ESSA HIDDEN TOKEN...
+
+
+
+
+
+
+
+
+
+certo...
+
+
+
+
+
+
+
+o professor coloca 
+
+
+
+
+credentials e cria 1 user,
+
+e aí 
+
+ele tenta fazer login com elas...
+
+
+
+
+
+tudo funciona...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ganhei um erro, '419 - page expired'....
+
+
+
+
+
+
+MAS PQ RECEBI ISSO?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> não era nada...
+
+
+
+
+
+
+
+
+
+
+
+ficou assim:
+
+
+
+
+
+
+
+
+
+   public function postSignIn(Request $request)
+    {
+
+        $email = $request['email'];
+        $password = $request['password'];
+
+        $is_valid = Auth::attempt(['email' => $email, 'password' => $password]);
+
+
+        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            print($is_valid);
+            print("IS VALID DOS GURI");
+            return redirect()->route('dashboard'); ///redirected to dashboard
+        } else {
+            print("IS NOT VALID DOS GURI");
+            return redirect()->back(); ///else, we return to the starting view
+        }
+    }
+
+
+
+
+
+
+--------------------------
+
+
+
+
+
+
+nosso negócio retornou true,
+
+o que 
+
+
+fez nosso app nos retornar até a page de ''dashboard''
+
+
+
+
+
+
+
+
+
+
+
+se escrevemos 1 password errado, somos redirecionados 
+
+à view de ''welcome''.... era o comportamento desejado..
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> mas também devemos fazer LOGIN DO USER, 
+
+
+QUANDO ELE FAZ LOGIN...
+
+
+
+
+
+--> MAS AGORA DEVEMOS:
+
+
+
+
+
+
+1) FAZER LOGIN DE VERDADE DO USER, QUANDO ELE FAZ LOGIN...
+
+
+
+
+
+
+
+
+2) PARA ISSO, DEVEMOS PROTEGER NOSSO DASHBOARD COM 1 AUTH GUARD...
+
+
+
+
+
+
+
+3) MAS ANTES DISSO, DEVEMOS SETTAR ALGO NO BROWSER DO USER, E NO NOSSO BACKEND/DATABASE,
+
+
+PARA GARANTIR QUE ELE REALMENTE FIQUE `LOGGED IN`...
+
+
+
+
+
+
+
+
+--> para isso, devemos acessar OUTRO HELPER METHOD,
+
+
+o 
+
+
+
+de 
+
+Auth::login($user) 
+
+
+
+
+
+
+
+
+
+
+----> ISSO VAI LOGGAR O USER QUE RECÉM CRIAMOS, LÁ NO METHOD DE `postSignUp`..
+
+
+
+
+
+
+EX:
+
+
+
+
+
+
+
+
+    public function postSignUp(Request $request)
+    {
+        $email = $request['email'];
+        $first_name = $request['first_name'];
+        $password = bcrypt($request['password']);
+
+        $user = new User();
+        $user->email = $email;
+        $user->first_name = $first_name;
+        $user->password = $password;
+
+        $user->save(); //salva o user no banco de dados
+
+
+        Auth::login($user); //isto faz o login do user no browser (deixa 1 session no browser do user)...
+        return redirect()->route('dashboard'); //redireciona para a página de dashboard
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+certo...
+
+
+
+
+
+
+
+
+
+
+
+
+
+isso vai NOS DEIXAR `TECNICAMENTE LOGGED IN`..
+
+
+
+
+
+
+
+ESSES FORAM O SIGNUP E SIGNIN..
+
+
+
+
+
+
+
+
+
+COM ISSO, SETTADO, DEVEMOS FOCAR EM ETAPAS COMO 
+
+
+
+"""NÁO DEVEMOS TER DOUBLE EMAIL ADDRESSES NAS NOSSAS DATABASES"""...
+
+
+
+
+
+
+
+
+
+DEPOIS DISSO, 
+
+
+
+VEREMOS """cOMO CRIAR NOSSO DASHBOARD""",
+
+
+
+
+
+E VER POSTS, E COMO CRIAR NOVOS POSTS...
