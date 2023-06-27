@@ -4971,3 +4971,41 @@ __ SE ENVOLVEM COM SESSIONS...
 
 
 TENTAMOS ISSO DE NOVO... E FUNCIONA...
+
+
+
+
+
+
+
+
+
+
+
+
+
+OK... NA PRÓXIMA AULA, VAMOS REFATORAR NOSSA FORM,
+
+
+PARA TERMOS 1 LANDING PAGE E ENTÃO O SIGNUP/LOGIN...
+
+
+
+
+
+
+
+
+
+--> NESSA FORM NÃO TEMOS VALIDATION...
+
+
+
+
+
+
+
+
+
+
+--> isso é algo que adicionaremos na próxima aula...
