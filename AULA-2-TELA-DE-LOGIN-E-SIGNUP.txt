@@ -1,0 +1,793 @@
+
+
+
+
+
+
+
+
+
+
+
+AQUI TEMOS O SEGUNDO VIDEO SOBRE LARAVEL E PHP..
+
+
+
+
+
+CONTINUAMOS COM AS LIÇÕES SOBRE A TEMPLATING ENGINE 'BLADE'...
+
+
+
+
+
+
+
+
+
+
+
+--> SEREMOS CAPAZES DE FAZER LOGIN, SIGNUP,
+
+
+VER POSTS DE OUTRAS PESSOAS, ETC ETC...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OK...
+
+
+
+
+
+
+
+
+TEREMOS BASTANTES COMPONENTS..
+
+
+
+
+
+
+
+
+
+
+--> AUTHENTICATION..
+
+
+
+
+
+
+
+--> DATABASE ACCESS...
+
+
+
+
+
+
+
+
+--> SÃO 2 TÓPICOS QUE VC PODE 'MESS UP',
+
+
+
+
+
+
+
+E ELES __ INFLUENCIAM __ A SEGURANÇA DO SEU OVERALL APP...
+
+
+
+
+
+
+
+
+
+--> MAS SÃO PARTES 
+
+EM QUE VC ENCONTRARÁ EM MTOS PROJECTS...
+
+
+
+
+
+
+
+
+
+
+
+--> OK.... NO NOSSO PROJECT,
+
+
+
+
+VAMOS COMEÇAR COM ESSAS TELAS DE SIGNUP E LOGIN...
+
+
+
+
+
+
+
+
+
+
+--> TEREMOS 1 FORM DE SIGNUP, E DEPOIS 1 FORM DE LOGIN...
+
+
+
+
+
+
+
+
+
+
+-> O PROFESSOR VAI CRIAR  TUDO ISSO 
+
+
+
+
+ENQUANTO ASSISTIMOS A AULA...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> O PROFESSOR VAI USAR O BOOTSTRAP FRAMEWORK, PARA FOCARMOS NO LARAVEL..
+
+
+
+
+
+
+
+
+
+
+
+-> OK... O PROFESSOR VAI BAIXAR O BOOTSTRAP 3, PROVAVELMENTE...
+
+
+
+
+
+
+
+
+--> ISSO FEITO,
+
+ELE VAI ATÉ O BLADE DE 'master',
+
+e aí 
+
+
+COLOCA 
+
+
+
+
+O  LINK DO CDN..
+
+
+
+
+
+
+
+-> TIPO ASSIM:
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- 'yield', com @, faz parte da sintaxe de 'hooks' do laravel -->
+    <!-- 'yield' é um 'placeholder', quer dizer 'insira algo aqui, neste local' -->
+    <title>@yield('title')</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        @yield('content')
+    </div>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CERTo...
+
+
+
+
+
+
+
+
+
+
+
+aí, lá na view de 'welcome',
+
+o professor quer ter 2 columns,
+
+
+com 
+
+
+
+
+1 FORM EM CADA 1 DELAS...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+O PROFESSOR TAMBÉM QUER TER 1 HEADER... --> 
+
+
+
+
+
+
+
+
+
+
+--> NAS PRÓXIMAS PAGES DE NOSSO APP,
+
+O HEADER VAI ACTUALLY NOS PERMITIR 'CREATE A POST',
+
+'VIEW OUR POSTS',
+
+
+
+
+E 
+
+'TIMELINE DE POSTS'..
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> PARA CRIAR ESSE HEADER,
+
+O PROFESSOR CRIA 1 FOLDER DE 'includes',
+
+dentro do folder de 'views'...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DENTRO DESSE FOLDER,
+
+
+
+COLOCAREMOS FILES _ QUE PODERÃO SER 'INCLUDED' POR OUTRAS VIEWS (
+    no caso,
+
+    a vue de 
+
+    'master.blade.php'...
+)
+
+
+
+
+
+
+
+
+
+ESCREVO TIPO ASSIM:
+
+
+
+
+
+
+<header>
+
+</header>
+
+
+
+
+
+
+
+
+
+
+
+
+-> O PROFESSOR ESCREVE 1 NAVBAR COMUM, TIPO ASSIM:
+
+
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Disabled</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+</header>
+
+
+
+
+
+
+
+---------------------------------
+
+
+
+
+
+
+
+
+
+CERTO...
+
+
+
+
+
+
+
+
+
+temos mt coisa, mas vamos nos livrar de várias delas...
+
+
+
+
+
+
+
+
+
+
+--> OK, VAI FICANDO TIPO ASSIM:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header>
+    <nav class="navbar navbar-default">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+
+
+
+
+
+
+
+--------------------
+
+
+
+
+
+OK...
+
+MAS AINDA NÃO É POSSÍVEL VER ESSE HEADER NO NOSSO PROJETO..
+
+
+
+
+
+
+É PQ É NECESSÁRIO FAZER 'INCLUDE' DELE, LÁ NO ARQUIVO DE 'master.blade.php'...
+
+
+
+
+
+
+
+
+
+
+
+
+PARA ISSO, PRECISAMOS 
+
+ESCREVEr 
+
+'@include()',
+
+E AÍ,
+
+
+DENTRO DOS PARÊNTESES,
+
+O PATH 
+
+ATÉ 
+
+
+
+A FILE QUE QUEREMOS 'INCLUDE' (o component, basicamente)
+
+
+nesse slot aí...
+
+
+
+
+
+
+tipo assim:
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- 'yield', com @, faz parte da sintaxe de 'hooks' do laravel -->
+    <!-- 'yield' é um 'placeholder', quer dizer 'insira algo aqui, neste local' -->
+    <title>@yield('title')</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+
+<body>
+    @include('includes.header')
+    <div class="container">
+        @yield('content')
+    </div>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PEGUEI 1 CÓDIGO MELHOR:
+
+
+
+
+
+
+
+
+
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">WebSiteName</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">Page 1</a></li>
+        <li><a href="#">Page 2</a></li>
+        <li><a href="#">Page 3</a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+
+
+
+
+
+
+---------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+certo.... incluído esse header,
+
+o professor agora quer ter 2 columns....
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+O CÓDIGO FICOU TIPO ASSIM:
+
+
+
+
+
+
+
+
+
+
+
+
+
+@extends('layouts.master')
+{{-- para conseguirmos 'INSERIR CONTEÚDO'
+dentro do layout de 'master', precisamos primeiramente passar o
+PATH ATÉ O SEU ARQUIVO, para definir que vamos inserir coisas deste arquivo 'welcome.blade.php' dentro de partes dele --}}
+
+
+
+@section('title')
+    Welcome to my humble app!!
+@endsection() {{-- usamos isto, essa função, para FECHAR o trecho de 1 placeholder --}}
+
+
+
+@section('content')
+    {{-- This is the content! --}}
+
+    <div class="row">
+        <div class="col-6 col-md-6">
+            <h3>Sign Up</h3>
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" name="email" id="email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="text">First Name</label>
+                    <input type="text" name="first_name" id="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class="col-6 col-md-6">
+            <h3>Sign In</h3>
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" name="email" id="email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+@endsection()
+
+
+
+
+
+
+
+
+
+
+
+
+NA PRÓXIMA AULA, VEREMOS TAMBÉM BACKEND STUFF...
+
+
+
+
+pq até agora só vimos FRONTEND STUFF...
+
+
+
+
+
+
+-> A TEMPLATING ENGINE FAZ PARTE DO LARAVEL, SIM, 
+
+
+MAS 
+
+COMO TEMOS 1 SERVERSIDE FRAMEWORK (o laravel em si),
+
+
+
+
+
+
+TEMOS MAIS DO QUE ISSO...
